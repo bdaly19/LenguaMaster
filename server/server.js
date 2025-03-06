@@ -3,7 +3,6 @@ const{Pool} = require('pg');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const req = require('express/lib/request');
 
 const app = express();
 const port = 3000;
@@ -48,17 +47,17 @@ app.post('/login', async (req, res) => {
             const user = result.rows[0];
             const match = await bcrypt.compare(passwords, user.passwords);
             if (match) {
-                const token = jwt.sign({id: user.id}, secretKey);
+                const token = jwt.sign({id: user.userid}, secretKey);
                 res.send({token});
             } else {
-                res.status(401).send('Invalid Credentials');
+                res.status(401).json({message: 'Invalid Credentials'});
             }
         } else {
-            res.status(401).send('Invalid Credentials');
+            res.status(401).json({message: 'Invalid Credentials'});
         }
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        res.status(500).json({message: 'Server Error'});
     }
 });
 
