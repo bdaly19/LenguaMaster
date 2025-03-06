@@ -2,7 +2,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     event.preventDefault();
 
     const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const passwords = document.getElementById('password').value;
     const email = document.getElementById('email').value;
     console.log('registered');
 
@@ -11,13 +11,14 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username, passwords: password, email })
+        body: JSON.stringify({ username, passwords, email })
     });
     console.log('response received');
     if (response.ok) {
         alert('Registration successful! You can now log in.');
         window.location.href = '/client/index.html';
     } else {
-        alert('Registration failed. Please try again.');
+        const result=await response.json();
+        alert('Registration failed: '+result.message);
     }
 });
