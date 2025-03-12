@@ -2,6 +2,7 @@ const express = require('express');
 const{Pool} = require('pg');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
@@ -13,8 +14,12 @@ const pool = new Pool({
     host: 'localhost',
     database: 'language_db',
     password: 'Beezwah0809*',
-    port: 5432,
+    port: 5432
 });
+
+pool.connect()
+.then(() => console.log('Connected to the database'))
+.catch(err => console.error('Error connecting to the database', err));
 
 app.use(express.json());
 app.use("/client", express.static(path.resolve(__dirname + '/../client')));
@@ -22,6 +27,8 @@ app.use("/client", express.static(path.resolve(__dirname + '/../client')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/../client/index.html'));
 });
+
+app.use(bodyParser.json());
 
 app.post('/register', async (req, res) => {
     const {username, passwords, email} = req.body;
@@ -31,7 +38,7 @@ app.post('/register', async (req, res) => {
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server Error');
+        res.status(500).json({message: 'Server Error'});
     }
 });
 
@@ -42,7 +49,7 @@ app.get('/register', (req, res) => {
 app.post('/login', async (req, res) => {
     const {username, passwords} = req.body;
     try {
-        const result = await pool.query('SELECT * FROM users WHERE username = $1 and password = $2', [username, passwords]);
+        const result = await pool.query('SELECT * FROM users WHERE username = $1 and passwords = $2', [username, passwords]);
         if (result.rows.length > 0) {
             const user = result.rows[0];
             const match = await bcrypt.compare(passwords, user.passwords);
@@ -50,15 +57,19 @@ app.post('/login', async (req, res) => {
                 const token = jwt.sign({id: user.userid}, secretKey);
                 res.send({token});
             } else {
-                res.status(401).json({message: 'Invalid Credentials'});
+                res.status(201).json({message: 'Invalid Credentials'});
             }
         } else {
-            res.status(401).json({message: 'Invalid Credentials'});
+            res.status(201).json({message: 'Invalid Credentials'});
         }
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Server Error'});
+        res.status(201).json({message: 'Server Error'});
     }
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../client/dashboard.html'));
 });
 
 app.get('/lessons', async (req, res) => {
