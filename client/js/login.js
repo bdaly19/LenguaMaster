@@ -2,15 +2,15 @@ document.getElementById('submit').addEventListener('click', async function(event
     event.preventDefault();
 
     const username=document.getElementById('username').value;
-    const password=document.getElementById('password').value;
+    const passwords=document.getElementById('password').value;
     console.log('logged in');
 
     const response=await fetch('/login', {
-        method: 'POST',
+        method: 'post',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({username, passwords})
     });
     console.log('response received');
     if(response.ok) {
