@@ -6,10 +6,21 @@
     <title>LenguaMaster</title>
     <link rel="shortcut icon" href="/client/images/lenguamasterlogo.png" type="image/x-icon">
     <link rel = "stylesheet" href = "/client/css/dashboard.css">
+    <link rel = "stylesheet" href = "/client/css/progress.css">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
+        <div id="logout-container">
+        <button id="logout">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </button>
+        <div id="logout-dropdown" class="dropdown-content">
+            <a id="logout-link" href="#">Logout</a>
+        </div>
+    </div>
         <h1>Dashboard</h1>
     </header>
     <nav>
@@ -45,5 +56,29 @@
     <footer>
         <p>&copy; 2025 LenguaMaster</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var logoutButton=document.getElementById('logout');
+        var logoutLink=document.getElementById('logout-link');
+        var dropdown=document.getElementById('logout-dropdown');
+        
+        if (logoutButton && logoutLink && dropdown) {
+            logoutButton.addEventListener('click', function(event) {
+                event.stopPropagation();
+                dropdown.style.display=dropdown.style.display==='block'?'none':'block';
+            });
+
+            logoutLink.addEventListener('click', function() {
+                window.location.href='/../client/index.html';
+            });
+
+            window.addEventListener('click', function() {
+            if (dropdown.style.display==='block' && !event.target.closest('#logout-container')) {
+            dropdown.style.display='none';
+            }
+        });
+    }
+});
+    </script>
 </body>
 </html>
