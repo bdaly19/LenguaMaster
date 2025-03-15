@@ -1,0 +1,63 @@
+body {
+    font-family: 'Manrope', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('https://as2.ftcdn.net/jpg/02/52/29/77/1000_F_252297751_oRrVHc36yLuykI7qQTCOkFTJhOiy0Zbe.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.progress-overview {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 25px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 20px;
+    width: 0;
+    background-color: #4caf50;
+    border-radius: 25px;
+    transition: width 0.3s ease;
+}
+
+.progress-details {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 400;
+    color: #555;
+}
+
+.no-underline {
+    text-decoration: none;
+    color: inherit;
+}
