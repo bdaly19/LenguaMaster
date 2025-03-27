@@ -16,7 +16,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     console.log('response received');
     if (response.ok) {
         alert('Registration successful! You can now log in.');
-        window.location.href = '/client/index.html';
+        window.location.href = '/client/html/index.html';
     } else {
         const result=await response.json();
         alert('Registration failed: '+result.message);
