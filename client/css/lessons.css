@@ -1,20 +1,32 @@
 body {
     font-family: 'Manrope', sans-serif;
     background-color: #f0f0f0;
+    background-image: url('https://as2.ftcdn.net/jpg/02/52/29/77/1000_F_252297751_oRrVHc36yLuykI7qQTCOkFTJhOiy0Zbe.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
+    height: 100vh;
 }
 
 header {
-    background-color: #4caf50;
-    color: white;
-    padding: 20px;
+    background-color: #02c4c4;
+    color: #ffffff;
+    padding: 1rem;
     text-align: center;
+    height: 3rem;
+    z-index: 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 nav ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
     display: flex;
     justify-content: center;
     background-color: #333;
@@ -57,16 +69,16 @@ main {
 
 .lesson h2 {
     font-size: 1.5rem;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
 }
 
 .lesson p {
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 0 0 20px 0;
 }
 
 .start-lesson {
-    background-color: #4caf50;
+    background-color: #0465ce;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -74,15 +86,9 @@ main {
 }
 
 .start-lesson:hover {
-    background-color: #45a049;
+    background-color: #024894;
 }
 
 footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    display: none;
 }
