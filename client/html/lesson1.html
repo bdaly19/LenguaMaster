@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/client/images/lenguamasterlogo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: white;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .question-container {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .answer {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .answer:hover {
+            background-color: #f0f0f0;
+        }
+
+        .message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="question-container" class="question-container" style="display: none;">
+        <div id="question-text"></div>
+        <div id="answers"></div>
+        <div id="message" class="message"></div>
+    </div>
+    <script>
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let answers = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const quizTestId = urlParams.get('quiztestid');
+        console.log('QuizTest ID:', quizTestId);
+
+        async function fetchQuestions() {
+            try {
+                const response = await fetch('http://localhost:3000/questions?quiztestid=' + quizTestId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Fetched questions:', data);
+
+                for(let question of data) {
+                    question.answers=await fetchAnswers(question.questionid);
+                }
+                return data;
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+                return [];
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function displayQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            const questionText = document.getElementById('question-text');
+            const answersContainer = document.getElementById('answers');
+            const message = document.getElementById('message');
+
+            message.textContent = '';
+
+            if (currentQuestionIndex < questions.length) {
+                const question = questions[currentQuestionIndex];
+                console.log('Current Question:', question);
+                questionText.innerHTML = question.questiontext;
+                
+                questionContainer.style.display = 'block';
+                displayAnswers(question.questionid);
+
+                questions.splice(currentQuestionIndex, 1);
+            } else {
+                questionText.textContent = 'Lesson completed!';
+                answersContainer.innerHTML = '';
+                message.textContent = '';
+
+                window.location.href='/client/html/lessons.html';
+            }
+        }
+        async function displayAnswers(questionid) {
+            const answers=await fetchAnswers(questionid);
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+
+            answers.forEach((answer, index) => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'answer';
+                answerDiv.textContent = answer.answertext;
+                answerDiv.onclick = () => checkAnswer(index);
+                answersContainer.appendChild(answerDiv);
+            });
+        }
+
+        async function fetchAnswers(questionid) {
+            try {
+                const response = await fetch(`http://localhost:3000/answers?questionid=${questionid}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Fetched answers:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching answers:', error);
+                return [];
+            }
+        }
+
+        
+        function checkAnswer(selectedIndex) {
+            const question = questions[currentQuestionIndex];
+            const message = document.getElementById('message');
+
+            console.log('Selected Index:', selectedIndex);
+            console.log('Current Question:', question);
+
+                if (question && question.answers && selectedIndex < question.answers.length) {
+                    const selectedAnswer = question.answers[selectedIndex];
+                    console.log('Selected Answer:', selectedAnswer);
+                    console.log('Correct Answer:', selectedAnswer.is_correct);
+
+                    if (selectedAnswer.is_correct) {
+                        currentQuestionIndex++;
+                        displayQuestion();
+                    } else {
+                        message.textContent = 'Incorrect, please try again.';
+                }
+            } else {
+                message.textContent = 'Error: Answer not found.';
+                console.error('Answer not found for selected index:', selectedIndex);
+        }
+    }
+
+        async function startLesson() {
+            questions = await fetchQuestions();
+            questions = shuffle(questions);
+            currentQuestionIndex = 0;
+            displayQuestion();
+        }
+
+        window.onload = startLesson;
+    </script>
+</body>
+</html>
