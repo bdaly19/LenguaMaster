@@ -98,35 +98,55 @@ app.post('/lessons', async (req, res) => {
 });
 
 app.get('/questions', async (req, res) => {
+    console.log('Fetching questions...');
+    const quiztestid = req.query.quiztestid || 1; // Default to quiztestid 1 if not provided
     try {
-        const result=await pool.query('SELECT questionid, quiztestid, questiontext, answer FROM questions ORDER BY RANDOM()');
-        const questions=result.rows.map(row => {
-            if (row.answer) {
-            const parts=row.answer.split('|');
-            const answers=[];
-            for(let i=0;i<parts.length;i+=2) {
-                answers.push({text: parts[i], isCorrect: parts[i+1]==='true'});
-            }
-            return {
-                questionText: row.questiontext,
-                answers: answers
-            };
-        }
-    });
+        const result=await pool.query(`
+            SELECT q.questionid, q.questiontext, a.answerid, a.answertext, a.is_correct
+            FROM questions q JOIN answers a ON q.questionid = a.questionid
+            WHERE q.quiztestid=$1
+            ORDER BY RANDOM()`, [quiztestid]
+        );
+        const questions=result.rows;
+        console.log(questions);
         res.json(questions);
-    } catch(err) {
-        console.error(err);
+    } catch (err) {
+        console.error('Error fetching questions', err);
         res.status(500).send('Server Error');
     }
 });
 
 app.post('/questions', async (req, res) => {
-    const {quiztestID, questionText, answer} = req.body;
+    const {quiztestid, questiontext, answers} = req.body;
     try {
-        const result = await pool.query('INSERT INTO questions (quiztestid, questiontext, answer) VALUES ($1, $2, $3) RETURNING *', [quiztestID, questionText, answer]);
+        const questionResult=await pool.query('INSERT INTO questions (quiztestid, questiontext) VALUES ($1, $2) RETURNING *', [quiztestid, questiontext]);
+        const questionId=questionResult.rows[0].questionid;
+
+        const answerPromises=answers.map(answer => {
+            return pool.query('INSERT INTO answers (questionid, answertext, is_correct) VALUES ($1, $2, $3)', [questionId, answer.text, answer.isCorrect]);
+        });
+        await Promise.all(answerPromises);
+
         res.json(result.rows[0]);
     } catch (err) {
-        console.error(err);
+        console.error('Error inserting question or answers:', err);
+        res.status(500).send('Server Error');
+    }
+});
+
+app.get('/answers', async (req, res) => {
+    console.log('Fetching answers...');
+    const questionid = req.query.questionid || 1; // Default to quiztestid 1 if not provided
+    try { //modify to select data from answers table
+        const result=await pool.query(`
+            SELECT a.answerid, a.answertext, a.is_correct
+            FROM answers a
+            WHERE a.questionid=$1`, [questionid]);
+        const answers=result.rows;
+        console.log(answers);
+        res.json(answers);
+    } catch (err) {
+        console.error('Error fetching answers', err);
         res.status(500).send('Server Error');
     }
 });
