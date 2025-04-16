@@ -106,7 +106,7 @@
             }
         }
         async function displayAnswers(questionid) {
-            const answers=await fetchAnswers(questionid);
+            answers=await fetchAnswers(questionid);
             const answersContainer = document.getElementById('answers');
             answersContainer.innerHTML = '';
 
@@ -148,11 +148,10 @@
             console.log('Current Question:', question);
 
                 if (question && question.answers && selectedIndex < question.answers.length) {
-                    const selectedAnswer = question.answers[selectedIndex];
-                    console.log('Selected Answer:', selectedAnswer);
-                    console.log('Correct Answer:', selectedAnswer.is_correct);
+                    const isCorrect = question.answers[selectedIndex].is_correct;
+                    console.log('Is Correct:', isCorrect);
 
-                    if (selectedAnswer.is_correct) {
+                    if (isCorrect) {
                         currentQuestionIndex++;
                         displayQuestion();
                     } else {
