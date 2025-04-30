@@ -51,11 +51,11 @@
         const quizTestId = urlParams.get('quiztestid');
         console.log('QuizTest ID:', quizTestId);
 
-        document.title=`Lesson ${quizTestId}`;
+        document.title=`Quiz/Test ${quizTestId}`;
 
         async function fetchQuestions() {
             try {
-                const response = await fetch('http://localhost:3000/questions?quiztestid=' + quizTestId, {
+                const response = await fetch('http://localhost:3000/questions?lessonid=' + lessonId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -99,13 +99,9 @@
                 displayAnswers(question.questionid);
 
             } else {
-                questionText.textContent = 'Lesson Completed!';
-                answersContainer.innerHTML = '';
-                message.textContent = '';
 
                 updateProgress();
                 setTimeout(() => {
-                    //window.location.href='/client/html/lessons.html';
                 },2000);
             }
         }

@@ -26,31 +26,32 @@
         <ul>
             <li><a href="/client/html/progress.html">Progress</a></li>
             <li><a href="/client/html/lessons.html">Lessons</a></li>
-            <li><a href="#videos">Videos</a></li>
-            <li><a href="#quizzestests">Quizzes/Tests</a></li>
+            <li><a href="/client/html/videos.html">Videos</a></li>
+            <li><a href="/client/html/quiztest.html">Quizzes/Tests</a></li>
         </ul>
     </nav>
     <div class="background-image"></div>"
     <main>
         <div class="container" id="progress">
-            <a href="/client/html/progress.html" class="no-underline">
-            <h2>Progress</h2>
+            <h2><a href="/client/html/progress.html" class="no-underline">
+            Progress</h2>
         </a>
         </div>
 
         <div class="container" id="lessons">
-            <a href="/client/html/lessons.html" class="no-underline">
-            <h2>Lessons</h2>
+            <h2><a href="/client/html/lessons.html" class="no-underline">
+            Lessons</h2>
         </div>
 
         <div class="container" id="videos">
-            <h2>Videos</h2>
-            <!-- Videos content here -->
+            <h2><a href="/client/html/videos.html" class="no-underline">
+            Videos</h2>    
         </div>
 
-        <div class="container" id="quizzestests">
+        <div class="container" id="quiztest">
             <h2>Quizzes/Tests</h2>
-            <!-- Quizzes/Tests content here -->
+            <h2><a href="/client/html/quiztest.html" class="no-underline">
+            Quizzes/Tests</h2>
         </div>
     </main>
     <footer>
@@ -75,7 +76,7 @@
             window.addEventListener('click', function() {
             if (dropdown.style.display==='block' && !event.target.closest('#logout-container')) {
             dropdown.style.display='none';
-            }
+            } 
         });
     }
 });

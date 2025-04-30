@@ -1,0 +1,95 @@
+
+body {
+    font-family: 'Manrope', sans-serif;
+    background-color: #f0f0f0;
+    background-image: url('https://as2.ftcdn.net/jpg/02/52/29/77/1000_F_252297751_oRrVHc36yLuykI7qQTCOkFTJhOiy0Zbe.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    }
+    
+header {
+    background-color: #02c4c4;
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+    height: 3rem;
+    z-index: 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    }
+    
+nav ul li {
+    margin: 0 10px;
+    }
+    
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+    }
+    
+nav ul li a:hover {
+    background-color: #575757;
+    }
+    
+main {
+    padding: 20px;
+    }
+    
+.quiz-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    }
+    
+.quiz {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    }
+
+.quiz h2 {
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    }
+    
+.quiz p {
+    font-size: 1rem;
+    margin-bottom: 0 0 20px 0;
+    }
+    
+.start-quiz {
+    background-color: #0465ce;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    }
+    
+.start-quiz:hover {
+    background-color: #024894;
+    }
+    
+footer {
+       display: none;
+    }    

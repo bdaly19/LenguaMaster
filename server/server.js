@@ -55,7 +55,8 @@ app.post('/login', async (req, res) => {
             const match = await bcrypt.compare(passwords, user.passwords);
             if (match) {
                 const token = jwt.sign({id: user.userid}, secretKey);
-                res.send({token});
+                console.log(user.userid);
+                res.send({user: user.userid});
             } else {
                 res.status(201).json({message: 'Invalid Credentials'});
             }
@@ -102,9 +103,9 @@ app.get('/questions', async (req, res) => {
     const quiztestid = req.query.quiztestid || 1; // Default to quiztestid 1 if not provided
     try {
         const result=await pool.query(`
-            SELECT q.questionid, q.questiontext, a.answerid, a.answertext, a.is_correct
-            FROM questions q JOIN answers a ON q.questionid = a.questionid
-            WHERE q.quiztestid=$1
+            SELECT questionid, questiontext
+            FROM questions
+            WHERE quiztestid=$1
             ORDER BY RANDOM()`, [quiztestid]
         );
         const questions=result.rows;
@@ -163,11 +164,59 @@ app.get('/progress', async (req, res) => {
 
 app.post('/progress', async (req, res) => {
     const {userID, lessonID, completionStatus, score} = req.body;
+    console.log('Inserting progress...');
+    console.log('userID='+userID);
+    console.log('lessonID='+lessonID);
+    console.log('completionStatus='+completionStatus);
+    console.log('score='+score);
     try {
-        const result = await pool.query('INSERT INTO progress (userID, lessonID, completionStatus, score) VALUES ($1, $2, $3) RETURNING *', [userID, lessonID, completionStatus, score]);
+        const result = await pool.query('INSERT INTO progress (userid, lessonid, completionstatus, score) VALUES ($1, $2, $3, $4) RETURNING *', [userID, lessonID, completionStatus, score]);
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+app.get('/videos', async(req, res) => {
+    try {
+        const result=await pool.query('SELECT url FROM videos');
+        console.log(result.rows);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching videos', err);
+        res.status(500).send('Server Error');
+    }
+});
+
+app.get('/quizzestests', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT quiztestid, questiontext
+            FROM quizzestests
+            WHERE lessonid=$1
+            ORDER BY RANDOM()`, [lessonid]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+app.post('/quizzestests', async (req, res) => {
+    const {lessonid, questiontext, answers} = req.body;
+    try {
+        const quiztestResult=await pool.query('INSERT INTO quizzestests (lessonid, questiontext) VALUES ($1, $2) RETURNING *', [lessonid, questiontext]);
+        const quiztestId=quiztestResult.rows[0].quiztestid;
+
+        const answerPromises=answers.map(answer => {
+            return pool.query('INSERT INTO quiztestanswers (quiztestid, answer, iscorrect) VALUES ($1, $2, $3)', [quiztestId, answer.text, answer.isCorrect]);
+        });
+        await Promise.all(answerPromises);
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Error inserting quiztest or answers:', err);
         res.status(500).send('Server Error');
     }
 });

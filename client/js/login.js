@@ -15,7 +15,7 @@ document.getElementById('submit').addEventListener('click', async function(event
     console.log('response received');
     if(response.ok) {
         const data=await response.json();
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', data.user);
         window.location.href='/../client/html/dashboard.html';
     } else {
         alert('Invalid Credentials. Please try again.');

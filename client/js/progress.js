@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let lessonsCompleted=0;
     let timeSpent=0;
+    let lessonStartTime;
 
     function updateProgress(lessonsCompleted, timeSpent) {
         const lessonProgress=(lessonsCompleted/totalLessons)*100;
@@ -20,14 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
         lessonsCompletedElement.textContent=lessonsCompleted;
 
         const timeSpentElement=document.getElementById('time-spent');
-        timeSpentElement.textContent=`${timeSpent} hours`;
+        timeSpentElement.textContent=`${timeSpent.toFixed(2)} hours`;
+    }
+
+    function startLesson() {
+        lessonStartTime=new Date();
+    }
+
+    function completeLesson() {
+        const lessonEndTime=new Date();
+        const timeSpentOnLesson=(lessonEndTime-lessonStartTime)/(1000*60*60);
+        timeSpent+=timeSpentOnLesson;
+        lessonsCompleted++;
+        updateProgress(lessonsCompleted, timeSpent);
     }
 
     updateProgress(lessonsCompleted, timeSpent);
 
-    setTimeout(() => {
-        lessonsCompleted=1;
-        timeSpent=10;
-        updateProgress(lessonsCompleted, timeSpent);
-    }, 2000);
+    document.getElementById('start-lesson').addEventListener('click', startLesson);
+    document.getElementById('complete-lesson').addEventListener('click', completeLesson);
 });
