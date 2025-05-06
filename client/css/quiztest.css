@@ -1,4 +1,3 @@
-
 body {
     font-family: 'Manrope', sans-serif;
     background-color: #f0f0f0;
@@ -52,15 +51,28 @@ main {
     padding: 20px;
     }
     
-.quiz-container {
+.quiztest-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     }
     
-.quiz {
+.quiztest:nth-child(1) {
+    grid-column: 1/2;
+}
+
+quiztest:nth-child(2) {
+    grid-column: 2/3;
+}
+
+quiztest:nth-child(3) {
+    grid-column: 1/3;
+    justify-self: center;
+}
+
+.quiztest {
     background-color: white;
-    border-radius: 8px;
+    border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin: 10px;
     padding: 20px;
@@ -68,17 +80,17 @@ main {
     text-align: center;
     }
 
-.quiz h2 {
+.quiztest h2 {
     font-size: 1.5rem;
     margin: 0 0 10px 0;
     }
     
-.quiz p {
+.quiztest p {
     font-size: 1rem;
     margin-bottom: 0 0 20px 0;
     }
     
-.start-quiz {
+.start-quiztest {
     background-color: #0465ce;
     color: white;
     padding: 10px 20px;
@@ -86,7 +98,7 @@ main {
     border-radius: 5px;
     }
     
-.start-quiz:hover {
+.start-quiztest:hover {
     background-color: #024894;
     }
     
