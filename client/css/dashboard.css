@@ -122,7 +122,17 @@ main {
     padding: 2rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows:  1fr auto;
     gap: 2rem;
+    grid-template-areas: ". ." "videos quizzes";
+}
+
+#videos {
+    grid-area: videos;
+}
+
+#quiztest {
+    grid-area: quizzes;
 }
 
 .container {
