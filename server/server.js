@@ -153,8 +153,9 @@ app.get('/answers', async (req, res) => {
 });
 
 app.get('/progress', async (req, res) => {
+    const {userid} = req.query;
     try {
-        const result = await pool.query('SELECT * FROM progress');
+        const result = await pool.query('SELECT COUNT(*) FROM progress WHERE userid = $1 AND completionstatus=true', [req.query.userid]);
         res.json(result.rows);
     } catch (err) {
         console.error(err);
@@ -185,38 +186,6 @@ app.get('/videos', async(req, res) => {
         res.json(result.rows);
     } catch (err) {
         console.error('Error fetching videos', err);
-        res.status(500).send('Server Error');
-    }
-});
-
-app.get('/quizzestests', async (req, res) => {
-    try {
-        const result = await pool.query(`
-            SELECT quiztestid, questiontext
-            FROM quizzestests
-            WHERE lessonid=$1
-            ORDER BY RANDOM()`, [lessonid]);
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
-    }
-});
-
-app.post('/quizzestests', async (req, res) => {
-    const {lessonid, questiontext, answers} = req.body;
-    try {
-        const quiztestResult=await pool.query('INSERT INTO quizzestests (lessonid, questiontext) VALUES ($1, $2) RETURNING *', [lessonid, questiontext]);
-        const quiztestId=quiztestResult.rows[0].quiztestid;
-
-        const answerPromises=answers.map(answer => {
-            return pool.query('INSERT INTO quiztestanswers (quiztestid, answer, iscorrect) VALUES ($1, $2, $3)', [quiztestId, answer.text, answer.isCorrect]);
-        });
-        await Promise.all(answerPromises);
-
-        res.json(result.rows[0]);
-    } catch (err) {
-        console.error('Error inserting quiztest or answers:', err);
         res.status(500).send('Server Error');
     }
 });
